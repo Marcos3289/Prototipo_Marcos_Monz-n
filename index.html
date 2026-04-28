@@ -394,46 +394,25 @@
     const enlaces = document.querySelectorAll('.menu a');
     const secciones = document.querySelectorAll('.tab-section');
 
-    enlaces.forEach(enlace => {
-      enlace.addEventListener('click', function(evento) {
-        evento.preventDefault();
-        enlaces.forEach(item => item.classList.remove('active'));
-        this.classList.add('active');
-        secciones.forEach(seccion => seccion.classList.remove('visible'));
-        document.getElementById(this.dataset.tab).classList.add('visible');
-      });
-    });
-
-    let estudiantes = [
+    const estudiantes = [
       {nombre: 'Ana López', correo: 'ana@ejemplo.com', curso: 'Diseño de Interfaces', estado: 'activo'},
       {nombre: 'Carlos Pérez', correo: 'carlos@ejemplo.com', curso: 'Análisis de Sistemas', estado: 'pendiente'},
       {nombre: 'María Gómez', correo: 'maria@ejemplo.com', curso: 'Programación Web', estado: 'activo'}
     ];
 
-    function renderTabla() {
-      const tabla = document.getElementById('tablaEstudiantes');
-      tabla.innerHTML = '';
+    enlaces.forEach(enlace => {
+      enlace.addEventListener('click', function(evento) {
+        evento.preventDefault();
 
-      estudiantes.forEach((est, index) => {
-        const fila = document.createElement('tr');
+        enlaces.forEach(item => item.classList.remove('active'));
+        this.classList.add('active');
 
-        fila.innerHTML = `
-          <td>${est.nombre}</td>
-          <td>${est.correo}</td>
-          <td>${est.curso}</td>
-          <td><span class="estado ${est.estado}">${est.estado}</span></td>
-          <td>
-            <button onclick="editar(${index})">✏️</button>
-            <button onclick="eliminar(${index})">🗑️</button>
-          </td>
-        `;
+        secciones.forEach(seccion => seccion.classList.remove('visible'));
+        document.getElementById(this.dataset.tab).classList.add('visible');
 
-        tabla.appendChild(fila);
+        actualizarTodo();
       });
-
-      actualizarReportes();
-      actualizarCards();
-    }
+    });
 
     function registrarEstudiante() {
       const nombre = document.getElementById('nombre').value.trim();
@@ -442,39 +421,99 @@
       const mensaje = document.getElementById('mensajeExito');
 
       if (nombre === '' || correo === '') {
-        alert('Completa los campos');
+        alert('Por favor completa el nombre y el correo electrónico.');
         return;
       }
 
       estudiantes.push({nombre, correo, curso, estado: 'activo'});
-
-      renderTabla();
 
       document.getElementById('nombre').value = '';
       document.getElementById('correo').value = '';
       mensaje.style.display = 'block';
 
       setTimeout(() => mensaje.style.display = 'none', 2000);
-    }
-
-    function eliminar(index) {
-      if (confirm('¿Eliminar estudiante?')) {
-        estudiantes.splice(index, 1);
-        renderTabla();
-      }
+      actualizarTodo();
     }
 
     function editar(index) {
       const est = estudiantes[index];
+      const nuevoNombre = prompt('Editar nombre:', est.nombre);
+      const nuevoCorreo = prompt('Editar correo:', est.correo);
+      const nuevoCurso = prompt('Editar curso:', est.curso);
+      const nuevoEstado = prompt('Editar estado: activo o pendiente', est.estado);
 
-      const nuevoNombre = prompt('Editar nombre', est.nombre);
-      const nuevoCorreo = prompt('Editar correo', est.correo);
+      if (!nuevoNombre || !nuevoCorreo || !nuevoCurso || !nuevoEstado) return;
 
-      if (nuevoNombre && nuevoCorreo) {
-        estudiantes[index].nombre = nuevoNombre;
-        estudiantes[index].correo = nuevoCorreo;
-        renderTabla();
+      const estadoNormalizado = nuevoEstado.toLowerCase().trim();
+
+      if (estadoNormalizado !== 'activo' && estadoNormalizado !== 'pendiente') {
+        alert('El estado debe ser activo o pendiente.');
+        return;
       }
+
+      estudiantes[index] = {
+        nombre: nuevoNombre.trim(),
+        correo: nuevoCorreo.trim(),
+        curso: nuevoCurso.trim(),
+        estado: estadoNormalizado
+      };
+
+      actualizarTodo();
+    }
+
+    function eliminar(index) {
+      if (confirm('¿Deseas eliminar este estudiante?')) {
+        estudiantes.splice(index, 1);
+        actualizarTodo();
+      }
+    }
+
+    function renderTablaPrincipal() {
+      const tablaPrincipal = document.querySelector('.content .panel table tbody');
+      tablaPrincipal.innerHTML = '';
+
+      estudiantes.slice(-3).forEach(est => {
+        tablaPrincipal.innerHTML += `
+          <tr>
+            <td>${est.nombre}</td>
+            <td>${est.curso}</td>
+            <td><span class="estado ${est.estado}">${capitalizar(est.estado)}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderTablaEstudiantes() {
+      const tabla = document.getElementById('tablaEstudiantes');
+      tabla.innerHTML = '';
+
+      estudiantes.forEach((est, index) => {
+        tabla.innerHTML += `
+          <tr>
+            <td>${est.nombre}</td>
+            <td>${est.correo}</td>
+            <td>${est.curso}</td>
+            <td><span class="estado ${est.estado}">${capitalizar(est.estado)}</span></td>
+            <td>
+              <button type="button" onclick="editar(${index})">✏️ Editar</button>
+              <button type="button" onclick="eliminar(${index})">🗑️ Eliminar</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function actualizarCards() {
+      const totalEstudiantes = estudiantes.length;
+      const cursosUnicos = new Set(estudiantes.map(e => e.curso)).size;
+      const activos = estudiantes.filter(e => e.estado === 'activo').length;
+      const pendientes = estudiantes.filter(e => e.estado === 'pendiente').length;
+      const totalReportes = activos + pendientes;
+
+      document.querySelector('.card:nth-child(1) h2').textContent = totalEstudiantes;
+      document.querySelector('.card:nth-child(2) h2').textContent = cursosUnicos;
+      document.querySelector('.card:nth-child(3) h2').textContent = totalEstudiantes;
+      document.querySelector('.card:nth-child(4) h2').textContent = totalReportes;
     }
 
     function actualizarReportes() {
@@ -482,17 +521,24 @@
       const activos = estudiantes.filter(e => e.estado === 'activo').length;
       const pendientes = estudiantes.filter(e => e.estado === 'pendiente').length;
 
-      document.getElementById('reporteTotal').textContent = total;
       document.getElementById('reporteActivos').textContent = activos;
       document.getElementById('reportePendientes').textContent = pendientes;
+      document.getElementById('reporteTotal').textContent = total;
     }
 
-    function actualizarCards() {
-      document.querySelector('.card:nth-child(1) h2').textContent = estudiantes.length;
-      document.querySelector('.card:nth-child(3) h2').textContent = estudiantes.length;
+    function capitalizar(texto) {
+      return texto.charAt(0).toUpperCase() + texto.slice(1);
     }
 
-    renderTabla();
+    function actualizarTodo() {
+      renderTablaPrincipal();
+      renderTablaEstudiantes();
+      actualizarCards();
+      actualizarReportes();
+    }
+
+    actualizarTodo();
   </script>
 </body>
 </html>
+
