@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prototipo - Panel de Control Académico</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #eef2f7;
+      color: #1f2937;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #243b53;
+      color: white;
+      padding: 28px 22px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 34px;
+    }
+
+    .menu a {
+      display: block;
+      color: #dbeafe;
+      text-decoration: none;
+      padding: 13px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .menu a.active,
+    .menu a:hover {
+      background: #14b8a6;
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      padding: 32px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      color: #102a43;
+    }
+
+    .user-card {
+      background: white;
+      padding: 12px 18px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      font-weight: bold;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .card span {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .card h2 {
+      margin-top: 10px;
+      color: #0f766e;
+      font-size: 28px;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 22px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .panel h3 {
+      margin-bottom: 18px;
+      color: #102a43;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #475569;
+      background: #f8fafc;
+    }
+
+    .estado {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .activo {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .pendiente {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #334155;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+    }
+
+    button {
+      width: 100%;
+      background: #14b8a6;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0f766e;
+    }
+
+    .justificacion {
+      margin-top: 24px;
+      background: #e0f2fe;
+      border-left: 6px solid #0284c7;
+      padding: 18px;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .app, .content {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .panel {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">Sistema Académico</div>
+      <nav class="menu">
+        <a href="#" class="active">Panel principal</a>
+        <a href="#">Estudiantes</a>
+        <a href="#">Cursos</a>
+        <a href="#">Reportes</a>
+        <a href="#">Configuración</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="header">
+        <div>
+          <h1>Panel de Control</h1>
+          <p>Resumen general del sistema y registro de estudiantes.</p>
+        </div>
+        <div class="user-card">👤 Marcos Monzón</div>
+      </section>
+
+      <section class="cards">
+        <div class="card"><span>Estudiantes</span><h2>128</h2></div>
+        <div class="card"><span>Cursos</span><h2>12</h2></div>
+        <div class="card"><span>Inscripciones</span><h2>87</h2></div>
+        <div class="card"><span>Reportes</span><h2>24</h2></div>
+      </section>
+
+      <section class="content">
+        <div class="panel">
+          <h3>Últimos registros</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Curso</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ana López</td>
+                <td>Diseño de Interfaces</td>
+                <td><span class="estado activo">Activo</span></td>
+              </tr>
+              <tr>
+                <td>Carlos Pérez</td>
+                <td>Análisis de Sistemas</td>
+                <td><span class="estado pendiente">Pendiente</span></td>
+              </tr>
+              <tr>
+                <td>María Gómez</td>
+                <td>Programación Web</td>
+                <td><span class="estado activo">Activo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h3>Formulario de registro</h3>
+          <form>
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" placeholder="Ingrese el nombre" />
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <input type="email" placeholder="correo@ejemplo.com" />
+            </div>
+            <div class="form-group">
+              <label>Curso</label>
+              <select>
+                <option>Diseño de Interfaces</option>
+                <option>Análisis de Sistemas</option>
+                <option>Programación Web</option>
+              </select>
+            </div>
+            <button type="button">Registrar estudiante</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="justificacion">
+        <strong>Justificación:</strong> Esta interfaz cumple con criterios de usabilidad y evaluación heurística porque presenta una estructura clara, coherente y fácil de navegar. El menú lateral permite identificar rápidamente las secciones principales del sistema, las tarjetas resumen muestran información relevante de forma visual y el formulario utiliza campos simples con etiquetas comprensibles. Además, los colores, estados y espacios entre elementos favorecen la lectura, reducen la confusión del usuario y mantienen consistencia visual en toda la pantalla.
+      </section>
+    </main>
+  </div>
+</body>
+</html>
