@@ -210,6 +210,42 @@
         margin-bottom: 20px;
       }
     }
+  
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.visible {
+      display: block;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+      color: #102a43;
+    }
+
+    .simple-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .simple-item {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 5px solid #14b8a6;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -217,11 +253,11 @@
     <aside class="sidebar">
       <div class="logo">Sistema Académico</div>
       <nav class="menu">
-        <a href="#" class="active">Panel principal</a>
-        <a href="#">Estudiantes</a>
-        <a href="#">Cursos</a>
-        <a href="#">Reportes</a>
-        <a href="#">Configuración</a>
+        <a href="#" class="active" data-tab="panel">Panel principal</a>
+        <a href="#" data-tab="estudiantes">Estudiantes</a>
+        <a href="#" data-tab="cursos">Cursos</a>
+        <a href="#" data-tab="reportes">Reportes</a>
+        <a href="#" data-tab="configuracion">Configuración</a>
       </nav>
     </aside>
 
@@ -234,6 +270,7 @@
         <div class="user-card">👤 Marcos Monzón</div>
       </section>
 
+      <div id="panel" class="tab-section visible">
       <section class="cards">
         <div class="card"><span>Estudiantes</span><h2>128</h2></div>
         <div class="card"><span>Cursos</span><h2>12</h2></div>
@@ -277,29 +314,160 @@
           <form>
             <div class="form-group">
               <label>Nombre completo</label>
-              <input type="text" placeholder="Ingrese el nombre" />
+              <input id="nombre" type="text" placeholder="Ingrese el nombre" required />
             </div>
             <div class="form-group">
               <label>Correo electrónico</label>
-              <input type="email" placeholder="correo@ejemplo.com" />
+              <input id="correo" type="email" placeholder="correo@ejemplo.com" required />
             </div>
             <div class="form-group">
               <label>Curso</label>
-              <select>
+              <select id="curso">
                 <option>Diseño de Interfaces</option>
                 <option>Análisis de Sistemas</option>
                 <option>Programación Web</option>
               </select>
             </div>
-            <button type="button">Registrar estudiante</button>
+            <button type="button" onclick="registrarEstudiante()">Registrar estudiante</button>
+            <div id="mensajeExito" class="success-message">✅ Estudiante registrado correctamente.</div>
           </form>
         </div>
       </section>
+      </div>
+
+      <div id="estudiantes" class="tab-section">
+        <section class="panel">
+          <h2 class="section-title">Estudiantes registrados</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Curso</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tablaEstudiantes">
+              <tr>
+                <td>Ana López</td>
+                <td>ana@ejemplo.com</td>
+                <td>Diseño de Interfaces</td>
+                <td><span class="estado activo">Activo</span></td>
+              </tr>
+              <tr>
+                <td>Carlos Pérez</td>
+                <td>carlos@ejemplo.com</td>
+                <td>Análisis de Sistemas</td>
+                <td><span class="estado pendiente">Pendiente</span></td>
+              </tr>
+              <tr>
+                <td>María Gómez</td>
+                <td>maria@ejemplo.com</td>
+                <td>Programación Web</td>
+                <td><span class="estado activo">Activo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <div id="cursos" class="tab-section">
+        <section class="panel">
+          <h2 class="section-title">Cursos disponibles</h2>
+          <div class="simple-list">
+            <div class="simple-item"><strong>Diseño de Interfaces</strong><br>Curso orientado a principios de usabilidad y experiencia de usuario.</div>
+            <div class="simple-item"><strong>Análisis de Sistemas</strong><br>Curso enfocado en levantamiento de requerimientos, diagramas y documentación.</div>
+            <div class="simple-item"><strong>Programación Web</strong><br>Curso para crear páginas funcionales usando HTML, CSS y JavaScript.</div>
+          </div>
+        </section>
+      </div>
+
+      <div id="reportes" class="tab-section">
+        <section class="panel">
+          <h2 class="section-title">Reportes del sistema</h2>
+          <div class="simple-list">
+            <div class="simple-item">📌 Estudiantes activos: <strong id="reporteActivos">2</strong></div>
+            <div class="simple-item">📌 Estudiantes pendientes: <strong id="reportePendientes">1</strong></div>
+            <div class="simple-item">📌 Total de estudiantes: <strong id="reporteTotal">3</strong></div>
+          </div>
+        </section>
+      </div>
+
+      <div id="configuracion" class="tab-section">
+        <section class="panel">
+          <h2 class="section-title">Configuración</h2>
+          <div class="simple-list">
+            <div class="simple-item"><strong>Usuario:</strong> Marcos Monzón</div>
+            <div class="simple-item"><strong>Interfaz:</strong> Panel académico responsivo</div>
+            <div class="simple-item"><strong>Estado:</strong> Prototipo funcional publicado en web</div>
+          </div>
+        </section>
+      </div>
 
       <section class="justificacion">
         <strong>Justificación:</strong> Esta interfaz cumple con criterios de usabilidad y evaluación heurística porque presenta una estructura clara, coherente y fácil de navegar. El menú lateral permite identificar rápidamente las secciones principales del sistema, las tarjetas resumen muestran información relevante de forma visual y el formulario utiliza campos simples con etiquetas comprensibles. Además, los colores, estados y espacios entre elementos favorecen la lectura, reducen la confusión del usuario y mantienen consistencia visual en toda la pantalla.
       </section>
     </main>
   </div>
+  <script>
+    const enlaces = document.querySelectorAll('.menu a');
+    const secciones = document.querySelectorAll('.tab-section');
+
+    enlaces.forEach(enlace => {
+      enlace.addEventListener('click', function(evento) {
+        evento.preventDefault();
+
+        enlaces.forEach(item => item.classList.remove('active'));
+        this.classList.add('active');
+
+        secciones.forEach(seccion => seccion.classList.remove('visible'));
+        document.getElementById(this.dataset.tab).classList.add('visible');
+      });
+    });
+
+    function registrarEstudiante() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const curso = document.getElementById('curso').value;
+      const mensaje = document.getElementById('mensajeExito');
+
+      if (nombre === '' || correo === '') {
+        alert('Por favor completa el nombre y el correo electrónico.');
+        return;
+      }
+
+      const tabla = document.getElementById('tablaEstudiantes');
+      const fila = document.createElement('tr');
+
+      fila.innerHTML = `
+        <td>${nombre}</td>
+        <td>${correo}</td>
+        <td>${curso}</td>
+        <td><span class="estado activo">Activo</span></td>
+      `;
+
+      tabla.appendChild(fila);
+      actualizarReportes();
+
+      document.getElementById('nombre').value = '';
+      document.getElementById('correo').value = '';
+      mensaje.style.display = 'block';
+
+      setTimeout(() => {
+        mensaje.style.display = 'none';
+      }, 2500);
+    }
+
+    function actualizarReportes() {
+      const total = document.querySelectorAll('#tablaEstudiantes tr').length;
+      const activos = document.querySelectorAll('#tablaEstudiantes .activo').length;
+      const pendientes = document.querySelectorAll('#tablaEstudiantes .pendiente').length;
+
+      document.getElementById('reporteTotal').textContent = total;
+      document.getElementById('reporteActivos').textContent = activos;
+      document.getElementById('reportePendientes').textContent = pendientes;
+    }
+  </script>
 </body>
 </html>
+
